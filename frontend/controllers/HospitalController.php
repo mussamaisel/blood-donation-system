@@ -224,24 +224,24 @@ class HospitalController extends Controller
         ]);
     }
 
-        // =====================
-        // NOTIFICATIONS
-        // =====================
-        public function actionNotifications()
-        {
-            $user = Yii::$app->user->identity;
+    // =====================
+    // NOTIFICATIONS
+    // =====================
+    public function actionNotifications()
+    {
+        $user = Yii::$app->user->identity;
 
-            $notifications = Notification::find()
-                ->where(['user_id' => $user->id])
-                ->orderBy(['created_at' => SORT_DESC])
-                ->all();
+        $notifications = Notification::find()
+            ->where(['user_id' => $user->id])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->all();
 
-            // Mark zote kuwa zimesomwa
-            Notification::markAllAsRead($user->id);
+        // Mark zote kuwa zimesomwa
+        Notification::markAllAsRead($user->id);
 
-            return $this->render('notifications', [
-                'notifications' => $notifications,
-            ]);
-        }
+        return $this->render('notifications', [
+            'notifications' => $notifications,
+        ]);
     }
+    
 }
