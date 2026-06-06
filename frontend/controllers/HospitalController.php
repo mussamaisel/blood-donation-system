@@ -39,6 +39,9 @@ class HospitalController extends Controller
     {
         $user     = Yii::$app->user->identity;
         $hospital = Hospital::findOne(['user_id' => $user->id]);
+        $unreadNotifications = Notification::find()
+            ->where(['user_id' => $user->id, 'is_read' => 0])
+            ->count();
 
         if (!$hospital) {
             return $this->redirect(['auth/login']);
@@ -82,6 +85,7 @@ class HospitalController extends Controller
             'approvedRequests' => $approvedRequests,
             'todayAppointments'=> $todayAppointments,
             'stockByType'      => $stockByType,
+            'unreadNotifications' => $unreadNotifications,
         ]);
     }
 
@@ -218,5 +222,26 @@ class HospitalController extends Controller
         return $this->render('profile', [
             'hospital' => $hospital,
         ]);
+    }
+
+        // =====================
+        // NOTIFICATIONS
+        // =====================
+        public function actionNotifications()
+        {
+            $user = Yii::$app->user->identity;
+
+            $notifications = Notification::find()
+                ->where(['user_id' => $user->id])
+                ->orderBy(['created_at' => SORT_DESC])
+                ->all();
+
+            // Mark zote kuwa zimesomwa
+            Notification::markAllAsRead($user->id);
+
+            return $this->render('notifications', [
+                'notifications' => $notifications,
+            ]);
+        }
     }
 }

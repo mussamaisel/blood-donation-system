@@ -78,6 +78,7 @@ return [
                 'language/<lang>' => 'site/language',
                 'donor/donations' => 'donor/donations',
                 'donor/notifications' => 'donor/notifications',
+                'hospital/notifications' => 'hospital/notifications',
             ],
         ],
         

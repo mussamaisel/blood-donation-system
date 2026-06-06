@@ -52,6 +52,7 @@ if (Yii::$app->user->isGuest) {
         ['label' => '🩸 Blood Requests', 'url' => ['/hospital/blood-requests']],
         ['label' => '📦 Blood Stock', 'url' => ['/hospital/blood-stock']],
         ['label' => '📅 Appointments', 'url' => ['/hospital/appointments']],
+        ['label' => '🔔 Notifications', 'url' => ['/hospital/notifications']],
         [
             'label' => 'Logout (' . Html::encode(Yii::$app->user->identity->username) . ')',
             'url'   => ['/auth/logout'],
