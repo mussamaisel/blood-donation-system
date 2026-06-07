@@ -6,6 +6,7 @@ use Yii;
 use common\models\User;
 use common\models\Donor;
 use common\models\Hospital;
+use common\models\Notification;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 
@@ -79,6 +80,18 @@ class AuthController extends Controller
                         $donor->user_id = $user->id;
                         if ($donor->save()) {
                             $transaction->commit();
+
+                            // Tuma notification kwa Admin
+                            $admin = User::findOne(['role' => User::ROLE_ADMIN]);
+                            if ($admin) {
+                                Notification::createNotification(
+                                    $admin->id,
+                                    'New Donor Registered',
+                                    'A new donor ' . $user->username . ' has registered and is waiting for approval.',
+                                    'info'
+                                );
+                            }
+
                             Yii::$app->session->setFlash('success', 'Registration successful! Please login.');
                             return $this->redirect(['auth/login']);
                         }
@@ -124,6 +137,18 @@ class AuthController extends Controller
                         $hospital->user_id = $user->id;
                         if ($hospital->save()) {
                             $transaction->commit();
+
+                            // Tuma notification kwa Admin
+                            $admin = User::findOne(['role' => User::ROLE_ADMIN]);
+                            if ($admin) {
+                                 Notification::createNotification(
+                                    $admin->id,
+                                    'New Hospital Registered',
+                                    'A new hospital ' . $hospital->name . ' has registered and is waiting for verification.',
+                                    'warning'
+                                );
+                            }
+
                             Yii::$app->session->setFlash('success', 'Hospital registered successfully! Please wait for Admin verification.');
                             return $this->redirect(['auth/login']);
                         }

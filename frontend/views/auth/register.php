@@ -25,7 +25,11 @@ $this->title = 'Register as Donor';
                         </div>
                     <?php endif; ?>
 
-                    <?php $form = ActiveForm::begin(['id' => 'register-form']); ?>
+                    <?php $form = ActiveForm::begin([
+                        'id' => 'register-form',
+                        'enableClientValidation' => false,
+                        'enableAjaxValidation'   => false,
+                    ]); ?>
 
                         <h5 class="text-danger mb-3">Account Information</h5>
                         <div class="row">
@@ -41,33 +45,24 @@ $this->title = 'Register as Donor';
                             </div>
                         </div>
 
-                       <div class="row">
-                           <div class="col-md-6">
-                               <div class="mb-3">
-                                   <label class="form-label">Password</label>
-                                   <div class="input-group">
-                                       <input type="password" id="reg-password" name="User[password]"
-                                           class="form-control" placeholder="Password">
-                                        <button class="btn btn-outline-secondary" type="button"
-                                            onclick="togglePassword('reg-password', 'eye-reg')">
-                                            <i id="eye-reg">👁</i>
-                                        </button>
-                                    </div>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?= $form->field($user, 'password')
+                                    ->passwordInput(['placeholder' => 'Password', 'id' => 'reg-password'])
+                                    ->label('Password') ?>
+                                <button type="button" class="btn btn-sm btn-outline-secondary mt-1"
+                                    onclick="togglePassword('reg-password', 'eye-reg')">
+                                    <i id="eye-reg">👁</i> Show Password
+                                </button>
                             </div>
                             <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Confirm Password</label>
-                                    <div class="input-group">
-                                        <input type="password" id="reg-confirm" name="User[confirm_password]"
-                                            class="form-control" placeholder="Confirm Password">
-                                        <button class="btn btn-outline-secondary" type="button"
-                                            onclick="togglePassword('reg-confirm', 'eye-confirm')">
-                                            <i id="eye-confirm">👁</i>
-                                        </button>
-                                    </div>
-                                    <div id="password-error" class="text-danger small mt-1"></div>
-                                </div>
+                                <?= $form->field($user, 'confirm_password')
+                                    ->passwordInput(['placeholder' => 'Confirm Password', 'id' => 'reg-confirm'])
+                                    ->label('Confirm Password') ?>
+                                <button type="button" class="btn btn-sm btn-outline-secondary mt-1"
+                                    onclick="togglePassword('reg-confirm', 'eye-confirm')">
+                                    <i id="eye-confirm">👁</i> Show Password
+                                </button>
                             </div>
                         </div>
 
@@ -161,19 +156,4 @@ function togglePassword(fieldId, eyeId) {
         eye.textContent = '👁';
     }
 }
-
-document.querySelector('#register-form').addEventListener('submit', function(e) {
-    var password = document.getElementById('reg-password').value;
-    var confirm  = document.getElementById('reg-confirm').value;
-    var errorDiv = document.getElementById('password-error');
-
-    if (password !== confirm) {
-        e.preventDefault();
-        errorDiv.textContent = 'Passwords do not match.';
-        document.getElementById('reg-confirm').classList.add('is-invalid');
-    } else {
-        errorDiv.textContent = '';
-        document.getElementById('reg-confirm').classList.remove('is-invalid');
-    }
-});
 </script>

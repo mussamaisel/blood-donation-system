@@ -10,6 +10,7 @@ use common\models\Donation;
 use common\models\BloodRequest;
 use common\models\BloodStock;
 use common\models\Appointment;
+use common\models\Notification;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 
@@ -43,6 +44,9 @@ class AdminController extends Controller
         $totalDonations   = Donation::find()->count();
         $pendingRequests  = BloodRequest::find()->where(['status' => 'pending'])->count();
         $pendingHospitals = Hospital::find()->where(['is_verified' => 0])->count();
+        $unreadNotifications = Notification::find()
+            ->where(['user_id' => Yii::$app->user->id, 'is_read' => 0])
+            ->count();
 
         $recentDonations = Donation::find()
             ->orderBy(['created_at' => SORT_DESC])
@@ -62,6 +66,7 @@ class AdminController extends Controller
             'pendingHospitals' => $pendingHospitals,
             'recentDonations'  => $recentDonations,
             'recentRequests'   => $recentRequests,
+            'unreadNotifications' => $unreadNotifications,
         ]);
     }
 
@@ -100,6 +105,15 @@ class AdminController extends Controller
         if ($hospital) {
             $hospital->is_verified = 1;
             $hospital->save();
+
+             // Tuma notification kwa Hospital
+            Notification::createNotification(
+                $hospital->user_id,
+                'Account Verified',
+                'Your hospital account has been verified! You can now use all features.',
+                'success'
+            );
+
             Yii::$app->session->setFlash('success', 'Hospital verified successfully.');
         }
         return $this->redirect(['admin/hospitals']);
@@ -131,6 +145,15 @@ class AdminController extends Controller
         if ($request) {
             $request->status = 'approved';
             $request->save();
+
+            // Tuma notification kwa Hospital
+            Notification::createNotification(
+                $request->hospital->user_id,
+                'Blood Request Approved',
+                'Your blood request for ' . $request->units_needed . ' units of ' . $request->blood_type . ' has been approved!',
+                'success'
+            );
+
             Yii::$app->session->setFlash('success', 'Request approved successfully.');
         }
         return $this->redirect(['admin/blood-requests']);
@@ -142,6 +165,15 @@ class AdminController extends Controller
         if ($request) {
             $request->status = 'cancelled';
             $request->save();
+
+            // Tuma notification kwa Hospital
+            Notification::createNotification(
+                $request->hospital->user_id,
+                'Blood Request Rejected',
+                'Your blood request for ' . $request->units_needed . ' units of ' . $request->blood_type . ' has been rejected.',
+                'danger'
+            );
+
             Yii::$app->session->setFlash('success', 'Request rejected successfully.');
         }
         return $this->redirect(['admin/blood-requests']);
@@ -180,6 +212,26 @@ class AdminController extends Controller
         return $this->render('reports', [
             'donationsByBloodType' => $donationsByBloodType,
             'monthlyDonations'     => $monthlyDonations,
+        ]);
+    }
+
+    // =====================
+    // NOTIFICATIONS
+    // =====================
+    public function actionNotifications()
+    {
+        $user = Yii::$app->user->identity;
+
+        $notifications = Notification::find()
+            ->where(['user_id' => $user->id])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->all();
+
+        // Mark zote kuwa zimesomwa
+        Notification::markAllAsRead($user->id);
+
+        return $this->render('notifications', [
+            'notifications' => $notifications,
         ]);
     }
 }

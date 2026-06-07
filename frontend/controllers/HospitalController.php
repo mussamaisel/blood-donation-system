@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use common\models\User;
 use common\models\Hospital;
 use common\models\BloodStock;
 use common\models\BloodRequest;
@@ -117,6 +118,17 @@ class HospitalController extends Controller
         $model->hospital_id = $hospital->id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            // Tuma notification kwa Admin
+            $admin = \common\models\User::findOne(['role' => 'admin']);
+            if ($admin) {
+                Notification::createNotification(
+                    $admin->id,
+                    'New Blood Request',
+                    $hospital->name . ' has requested ' . $model->units_needed . ' units of ' . $model->blood_type . ' blood. Priority: ' . ucfirst($model->priority),
+                    'warning'
+                );
+            }
+
             Yii::$app->session->setFlash('success', 'Blood request submitted successfully!');
             return $this->redirect(['hospital/blood-requests']);
         }
@@ -188,8 +200,17 @@ class HospitalController extends Controller
     {
         $appointment = Appointment::findOne($id);
         if ($appointment) {
-            $appointment->status = 'approved';
+            $appointment->status =  Appointment::STATUS_APPROVED;
             $appointment->save();
+
+            // Tuma notification kwa Donor
+            Notification::createNotification(
+                $appointment->donor->user_id,
+                'Appointment Approved',
+                'Your appointment at ' . $appointment->hospital->name . ' on ' . $appointment->appointment_date . ' at ' . $appointment->appointment_time . ' has been approved!',
+                'success'
+            );
+
             Yii::$app->session->setFlash('success', 'Appointment approved successfully!');
         }
         return $this->redirect(['hospital/appointments']);
@@ -199,8 +220,17 @@ class HospitalController extends Controller
     {
         $appointment = Appointment::findOne($id);
         if ($appointment) {
-            $appointment->status = 'cancelled';
+            $appointment->status = Appointment::STATUS_CANCELLED;
             $appointment->save();
+
+            // Tuma notification kwa Donor
+            Notification::createNotification(
+                $appointment->donor->user_id,
+                'Appointment Cancelled',
+                'Your appointment at ' . $appointment->hospital->name . ' on ' . $appointment->appointment_date . ' has been cancelled.',
+                'danger'
+            );
+
             Yii::$app->session->setFlash('success', 'Appointment rejected successfully!');
         }
         return $this->redirect(['hospital/appointments']);

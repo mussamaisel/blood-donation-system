@@ -79,6 +79,7 @@ return [
                 'donor/donations' => 'donor/donations',
                 'donor/notifications' => 'donor/notifications',
                 'hospital/notifications' => 'hospital/notifications',
+                'admin/notifications' => 'admin/notifications',
             ],
         ],
         

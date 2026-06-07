@@ -85,6 +85,17 @@ class DonorController extends Controller
             $model->donor_id = $donor->id;
             $model->status   = Appointment::STATUS_PENDING;
             if ($model->save()) {
+                // Tuma notification kwa Hospital
+                $hospital = \common\models\Hospital::findOne($model->hospital_id);
+                if ($hospital) {
+                    Notification::createNotification(
+                        $hospital->user_id,
+                        'New Appointment Booked',
+                        $donor->full_name . ' has booked an appointment on ' . $model->appointment_date . ' at ' . $model->appointment_time,
+                        'info'
+                    );
+                }
+
                 Yii::$app->session->setFlash('success', 'Appointment booked successfully!');
                 return $this->redirect(['donor/appointments']);
             }
