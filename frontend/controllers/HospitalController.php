@@ -273,5 +273,33 @@ class HospitalController extends Controller
             'notifications' => $notifications,
         ]);
     }
-    
+    // =====================
+    // CHANGE PASSWORD
+    // =====================
+    public function actionChangePassword()
+    {
+        $user = Yii::$app->user->identity;
+
+        if (Yii::$app->request->isPost) {
+            $post            = Yii::$app->request->post();
+            $currentPassword = $post['current_password'] ?? '';
+            $newPassword     = $post['new_password'] ?? '';
+            $confirmPassword = $post['confirm_password'] ?? '';
+
+            if (!$user->validatePassword($currentPassword)) {
+                Yii::$app->session->setFlash('error', 'Current password is incorrect.');
+            } elseif (strlen($newPassword) < 6) {
+                Yii::$app->session->setFlash('error', 'New password must be at least 6 characters.');
+            } elseif ($newPassword !== $confirmPassword) {
+                Yii::$app->session->setFlash('error', 'New passwords do not match.');
+            } else {
+                $user->setPassword($newPassword);
+                $user->save(false);
+                Yii::$app->session->setFlash('success', 'Password changed successfully!');
+                return $this->redirect(['hospital/dashboard']);
+            }
+        }
+
+        return $this->render('change-password');
+    }
 }

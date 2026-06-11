@@ -80,6 +80,10 @@ return [
                 'donor/notifications' => 'donor/notifications',
                 'hospital/notifications' => 'hospital/notifications',
                 'admin/notifications' => 'admin/notifications',
+                'donor/change-password' => 'donor/change-password',
+                'hospital/change-password' => 'hospital/change-password',
+                'admin/change-password' => 'admin/change-password',
+                'forgot-password' => 'auth/forgot-password',
             ],
         ],
         

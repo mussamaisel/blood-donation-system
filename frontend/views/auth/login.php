@@ -17,6 +17,17 @@ $this->title = 'Login';
                 </div>
 
                 <div class="card-body p-4">
+                    
+                    <?php if ($model->hasErrors()): ?>
+                        <div class="alert alert-danger">
+                            <strong>❌ Login Failed!</strong>
+                            <?php foreach ($model->errors as $errors): ?>
+                                <?php foreach ($errors as $error): ?>
+                                    <p class="mb-0"><?= $error ?></p>
+                                <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
 
                     <?php if (Yii::$app->session->hasFlash('success')): ?>
                         <div class="alert alert-success">
@@ -62,6 +73,12 @@ $this->title = 'Login';
 
                     <?php ActiveForm::end(); ?>
 
+                </div>
+
+                <div class="text-center mb-3">
+                    <?= Html::a('Forgot Password?', ['auth/forgot-password'], [
+                        'class' => 'text-danger'
+                    ]) ?>
                 </div>
 
                 <div class="card-footer text-center">

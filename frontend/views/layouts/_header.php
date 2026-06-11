@@ -27,6 +27,7 @@ if (Yii::$app->user->isGuest) {
         ['label' => '📦 Blood Stock', 'url' => ['/admin/blood-stock']],
         ['label' => '📊 Reports', 'url' => ['/admin/reports']],
         ['label' => '🔔 Notifications', 'url' => ['/admin/notifications']],
+        ['label' => '🔐 Change Password', 'url' => ['/admin/change-password']],
         [
             'label' => 'Logout (' . Html::encode(Yii::$app->user->identity->username) . ')',
             'url'   => ['/auth/logout'],
@@ -40,6 +41,7 @@ if (Yii::$app->user->isGuest) {
         ['label' => '📅 Appointments', 'url' => ['/donor/appointments']],
         ['label' => '📅 Book Appointment', 'url' => ['/donor/book-appointment']],
         ['label' => '🔔 Notifications', 'url' => ['/donor/notifications']],
+        ['label' => '🔐 Change Password', 'url' => ['/donor/change-password']],
         [
             'label' => 'Logout (' . Html::encode(Yii::$app->user->identity->username) . ')',
             'url'   => ['/auth/logout'],
@@ -54,6 +56,7 @@ if (Yii::$app->user->isGuest) {
         ['label' => '📦 Blood Stock', 'url' => ['/hospital/blood-stock']],
         ['label' => '📅 Appointments', 'url' => ['/hospital/appointments']],
         ['label' => '🔔 Notifications', 'url' => ['/hospital/notifications']],
+        ['label' => '🔐 Change Password', 'url' => ['/hospital/change-password']],
         [
             'label' => 'Logout (' . Html::encode(Yii::$app->user->identity->username) . ')',
             'url'   => ['/auth/logout'],

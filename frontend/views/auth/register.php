@@ -25,6 +25,27 @@ $this->title = 'Register as Donor';
                         </div>
                     <?php endif; ?>
 
+                    <?php if ($user->hasErrors() || $donor->hasErrors()): ?>
+                        <div class="alert alert-danger">
+                            <strong>❌ Please fix the following errors:</strong>
+                            <ul class="mb-0 mt-1">
+                                <?php foreach ($user->errors as $field => $errors): ?>
+                                    <?php foreach ($errors as $error): ?>
+                                        <li><?= $error ?></li>
+                                    <?php endforeach; ?>
+                                <?php endforeach; ?>
+                                <?php foreach ($donor->errors as $field => $errors): ?>
+                                    <?php foreach ($errors as $error): ?>
+                                        <li><?= $error ?></li>
+                                    <?php endforeach; ?>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+                        
+                            
+                    
+
                     <?php $form = ActiveForm::begin([
                         'id' => 'register-form',
                         'enableClientValidation' => false,

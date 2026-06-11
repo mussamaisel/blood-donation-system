@@ -193,4 +193,59 @@ class AuthController extends Controller
         Yii::$app->user->logout();
         return $this->redirect(['auth/login']);
     }
+
+    // =====================
+    // FORGOT PASSWORD
+    // =====================
+    public function actionForgotPassword()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->redirect(['auth/dashboard']);
+        }
+
+        $email = '';
+        $step  = 1;
+
+        if (Yii::$app->request->isPost) {
+            $post  = Yii::$app->request->post();
+            $email = $post['email'] ?? '';
+            $step  = (int)($post['step'] ?? 1);
+
+            // Step 1 — Verify email
+            if ($step == 1) {
+                $user = User::findByEmail($email);
+                if ($user) {
+                    $step = 2;
+                } else {
+                    Yii::$app->session->setFlash('error', 'No account found with this email address.');
+                    $step = 1;
+                }
+            }
+
+            // Step 2 — Reset password
+            if ($step == 2 && isset($post['new_password'])) {
+                $user = User::findByEmail($email);
+                if ($user) {
+                    $newPassword     = $post['new_password'];
+                    $confirmPassword = $post['confirm_password'] ?? '';
+
+                    if (strlen($newPassword) < 6) {
+                        Yii::$app->session->setFlash('error', 'Password must be at least 6 characters.');
+                    } elseif ($newPassword !== $confirmPassword) {
+                        Yii::$app->session->setFlash('error', 'Passwords do not match.');
+                    } else {
+                        $user->setPassword($newPassword);
+                        $user->save(false);
+                        Yii::$app->session->setFlash('success', 'Password reset successfully! Please login with your new password.');
+                        return $this->redirect(['auth/login']);
+                    }
+                }
+            }
+        }
+
+        return $this->render('forgot-password', [
+            'email' => $email,
+            'step'  => $step,
+        ]);
+    }
 }

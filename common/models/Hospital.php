@@ -43,15 +43,15 @@ class Hospital extends ActiveRecord
         return [
             'id'          => 'ID',
             'user_id'     => 'User',
-            'name'        => 'Jina la Hospitali',
-            'email'       => 'Barua Pepe',
-            'phone'       => 'Simu',
-            'address'     => 'Anwani',
-            'city'        => 'Mji',
-            'region'      => 'Mkoa',
-            'is_verified' => 'Imethibitishwa',
-            'created_at'  => 'Imetengenezwa',
-            'updated_at'  => 'Imebadilishwa',
+            'name'        => 'Hospital Name',
+            'email'       => 'Email',
+            'phone'       => 'Phone Number',
+            'address'     => 'Address',
+            'city'        => 'City',
+            'region'      => 'Region',
+            'is_verified' => 'Verified',
+            'created_at'  => 'Created at',
+            'updated_at'  => 'Updated at',
         ];
     }
 

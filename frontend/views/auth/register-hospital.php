@@ -24,6 +24,24 @@ $this->title = 'Register Hospital';
                         </div>
                     <?php endif; ?>
 
+                    <?php if ($user->hasErrors() || $hospital->hasErrors()): ?>
+                        <div class="alert alert-danger">
+                            <strong>❌ Please fix the following errors:</strong>
+                            <ul class="mb-0 mt-1">
+                                <?php foreach ($user->errors as $field => $errors): ?>
+                                    <?php foreach ($errors as $error): ?>
+                                        <li><?= $error ?></li>
+                                    <?php endforeach; ?>
+                                <?php endforeach; ?>
+                                <?php foreach ($hospital->errors as $field => $errors): ?>
+                                    <?php foreach ($errors as $error): ?>
+                                        <li><?= $error ?></li>
+                                    <?php endforeach; ?>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
                     <?php $form = ActiveForm::begin(['id' => 'register-hospital-form']); ?>
 
                         <h5 class="text-danger mb-3">Account Information</h5>
