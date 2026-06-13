@@ -358,6 +358,21 @@ class HospitalController extends Controller
             // Badilisha status ya appointment
             $appointment->status = Appointment::STATUS_COMPLETED;
             $appointment->save();
+            // Ongeza units_fulfilled kwenye blood request inayohusiana
+            $bloodRequest = \common\models\BloodRequest::findOne([
+                'hospital_id' => $hospital->id,
+                'blood_type'  => $appointment->donor->blood_type,
+                'status'      => 'approved',
+            ]);
+
+            if ($bloodRequest) {
+                $bloodRequest->units_fulfilled += 1;
+                // Angalia kama imekamilika
+                if ($bloodRequest->units_fulfilled >= $bloodRequest->units_needed) {
+                    $bloodRequest->status = \common\models\BloodRequest::STATUS_FULFILLED;
+                }
+                $bloodRequest->save();
+            }
 
             // Badilisha last_donation ya donor
             $donor = $appointment->donor;
