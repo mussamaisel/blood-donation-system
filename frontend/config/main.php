@@ -84,6 +84,7 @@ return [
                 'hospital/change-password' => 'hospital/change-password',
                 'admin/change-password' => 'admin/change-password',
                 'forgot-password' => 'auth/forgot-password',
+                'hospital/mark-as-donated/<id:\d+>' => 'hospital/mark-as-donated',
             ],
         ],
         

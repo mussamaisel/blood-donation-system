@@ -201,8 +201,10 @@ class HospitalController extends Controller
         $appointment = Appointment::findOne($id);
         if ($appointment) {
             $appointment->status =  Appointment::STATUS_APPROVED;
-            $appointment->save();
-
+            if (!$appointment->save(false)) {
+                Yii::$app->session->setFlash('error', 'Failed to approve: ' . json_encode($appointment->errors));
+                return $this->redirect(['hospital/appointments']);
+            }
             // Tuma notification kwa Donor
             Notification::createNotification(
                 $appointment->donor->user_id,
@@ -301,5 +303,101 @@ class HospitalController extends Controller
         }
 
         return $this->render('change-password');
+    }
+
+    // =====================
+    // MARK AS DONATED
+    // =====================
+    public function actionMarkAsDonated($id)
+    {
+        $appointment = Appointment::findOne($id);
+
+        if (!$appointment) {
+            Yii::$app->session->setFlash('error', 'Appointment not found.');
+            return $this->redirect(['hospital/appointments']);
+        }
+
+        // Angalia kama appointment imeshakuwa completed
+        if ($appointment->status === Appointment::STATUS_COMPLETED) {
+            Yii::$app->session->setFlash('error', 'This appointment has already been marked as donated!');
+            return $this->redirect(['hospital/appointments']);
+        }
+
+        // Angalia kama appointment imeidhinishwa kwanza
+        if ($appointment->status !== Appointment::STATUS_APPROVED) {
+            Yii::$app->session->setFlash('error', 'This appointment must be approved before marking as donated!');
+            return $this->redirect(['hospital/appointments']);
+        }
+
+        // Angalia kama donation ipo tayari kwa appointment hii
+        $existingDonation = \common\models\Donation::findOne([
+            'donor_id'    => $appointment->donor_id,
+            'donated_at'  => date('Y-m-d'),
+            'hospital_id' => $appointment->hospital_id,
+        ]);
+
+        if ($existingDonation) {
+            Yii::$app->session->setFlash('error', 'A donation has already been recorded for this donor today!');
+            return $this->redirect(['hospital/appointments']);
+        }
+   
+        $user     = Yii::$app->user->identity;
+        $hospital = Hospital::findOne(['user_id' => $user->id]);
+
+        // Tengeneza donation record
+        $donation              = new \common\models\Donation();
+        $donation->donor_id    = $appointment->donor_id;
+        $donation->hospital_id = $hospital->id;
+        $donation->blood_type  = $appointment->donor->blood_type;
+        $donation->units       = 1;
+        $donation->status      = \common\models\Donation::STATUS_COMPLETED;
+        $donation->donated_at  = date('Y-m-d');
+        $donation->notes       = $appointment->notes;
+
+        if ($donation->save()) {
+            // Badilisha status ya appointment
+            $appointment->status = Appointment::STATUS_COMPLETED;
+            $appointment->save();
+
+            // Badilisha last_donation ya donor
+            $donor = $appointment->donor;
+            $donor->last_donation = date('Y-m-d');
+            $donor->save(false);
+
+            // Ongeza damu kwenye blood stock
+            $stock = \common\models\BloodStock::findOne([
+                'hospital_id' => $hospital->id,
+                'blood_type'  => $appointment->donor->blood_type,
+                'status'      => 'available',
+            ]);
+
+            if ($stock) {
+                $stock->units += 1;
+                $stock->save();
+            } else {
+                // Tengeneza stock mpya
+                $newStock              = new \common\models\BloodStock();
+                $newStock->hospital_id = $hospital->id;
+                $newStock->blood_type  = $appointment->donor->blood_type;
+                $newStock->units       = 1;
+                $newStock->expiry_date = date('Y-m-d', strtotime('+42 days'));
+                $newStock->status      = 'available';
+                $newStock->save();
+            }
+
+            // Tuma notification kwa Donor
+            Notification::createNotification(
+                $appointment->donor->user_id,
+                'Donation Completed',
+                'Thank you! Your blood donation at ' . $hospital->name . ' on ' . date('d M Y') . ' has been recorded. You have saved lives!',
+                'success'
+            );
+
+            Yii::$app->session->setFlash('success', 'Donation recorded successfully! Blood stock updated.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Failed to record donation.');
+        }
+
+        return $this->redirect(['hospital/appointments']);
     }
 }

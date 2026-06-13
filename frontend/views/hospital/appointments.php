@@ -75,8 +75,14 @@ $this->title = 'Appointments';
                                             'data-confirm' => 'Are you sure you want to reject this appointment?',
                                             'data-method'  => 'post',
                                         ]) ?>
+                                    <?php elseif ($appointment->status == 'approved'): ?>
+                                        <?= Html::a('✅ Mark as Donated', ['hospital/mark-as-donated', 'id' => $appointment->id], [
+                                            'class' => 'btn btn-sm btn-danger',
+                                            'data-confirm' => 'Confirm that this donor has donated blood?',
+                                            'data-method'  => 'post',
+                                        ]) ?>
                                     <?php else: ?>
-                                        <span class="text-muted">No actions</span>
+                                            <span class="text-muted">No actions</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>

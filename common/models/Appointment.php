@@ -46,14 +46,14 @@ class Appointment extends ActiveRecord
     {
         return [
             'id'               => 'ID',
-            'donor_id'         => 'Mfadhili',
+            'donor_id'         => 'Donor',
             'hospital_id'      => 'Hospital',
             'appointment_date' => 'Appointment Date',
             'appointment_time' => 'Appointment Time',
-            'status'           => 'Hali',
-            'notes'            => 'Maelezo',
-            'created_at'       => 'Imetengenezwa',
-            'updated_at'       => 'Imebadilishwa',
+            'status'           => 'Status',
+            'notes'            => 'Notes',
+            'created_at'       => 'Created at',
+            'updated_at'       => 'Updated at',
         ];
     }
 

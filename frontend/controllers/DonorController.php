@@ -112,12 +112,12 @@ class DonorController extends Controller
     {
         $appointment = Appointment::findOne($id);
         if ($appointment) {
-            $appointment->status = Appointment::STATUS_CANCELLED;
-            $appointment->save();
+            $appointment->delete();
             Yii::$app->session->setFlash('success', 'Appointment cancelled successfully!');
         }
-        return $this->redirect(['donor/appointments']);
+        return $this->redirect(['donor/appointment']);
     }
+
     // =====================
     // MY DONATIONS
     // =====================
