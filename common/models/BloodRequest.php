@@ -59,15 +59,15 @@ class BloodRequest extends ActiveRecord
         return [
             'id'              => 'ID',
             'hospital_id'     => 'Hospitali',
-            'blood_type'      => 'Aina ya Damu',
-            'units_needed'    => 'Units Zinazohitajika',
-            'units_fulfilled' => 'Units Zilizotolewa',
-            'priority'        => 'Kipaumbele',
-            'status'          => 'Hali',
-            'reason'          => 'Sababu',
-            'needed_by'       => 'Inahitajika Tarehe',
-            'created_at'      => 'Imetengenezwa',
-            'updated_at'      => 'Imebadilishwa',
+            'blood_type'      => 'Blood type',
+            'units_needed'    => 'Units needed',
+            'units_fulfilled' => 'Units fulfilled',
+            'priority'        => 'Priority',
+            'status'          => 'Status',
+            'reason'          => 'Reason',
+            'needed_by'       => 'Needed by',
+            'created_at'      => 'Created at',
+            'updated_at'      => 'Updated at',
         ];
     }
 

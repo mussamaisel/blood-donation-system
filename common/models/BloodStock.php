@@ -44,12 +44,12 @@ class BloodStock extends ActiveRecord
         return [
             'id'          => 'ID',
             'hospital_id' => 'Hospitali',
-            'blood_type'  => 'Aina ya Damu',
-            'units'       => 'Idadi ya Units',
-            'expiry_date' => 'Tarehe ya Kuisha',
-            'status'      => 'Hali',
-            'created_at'  => 'Imetengenezwa',
-            'updated_at'  => 'Imebadilishwa',
+            'blood_type'  => 'Blood type',
+            'units'       => 'Total units',
+            'expiry_date' => 'Expire date',
+            'status'      => 'Status',
+            'created_at'  => 'Created at',
+            'updated_at'  => 'Updated at',
         ];
     }
 

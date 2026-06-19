@@ -76,10 +76,22 @@ class DonorController extends Controller
         $user  = Yii::$app->user->identity;
         $donor = Donor::findOne(['user_id' => $user->id]);
 
+        // Angalia kama donor anaweza kutoa damu
+        if (!$donor->canDonate()) {
+            Yii::$app->session->setFlash('error',
+                'You cannot book an appointment yet! You must wait 3 months since your last donation. Last Donation: ' . $donor->last_donation
+            );
+            return $this->render('book-appointment', [
+                'model'     => new Appointment(),
+                'donor'     => $donor,
+                'hospitals' => \common\models\Hospital::find()->where(['is_verified' => 1])->all(),
+            ]);
+        }
+
         $model     = new Appointment();
         $hospitals = \common\models\Hospital::find()
             ->where(['is_verified' => 1])
-            ->all();
+            ->all();    
 
         if ($model->load(Yii::$app->request->post())) {
             $model->donor_id = $donor->id;
@@ -115,7 +127,7 @@ class DonorController extends Controller
             $appointment->delete();
             Yii::$app->session->setFlash('success', 'Appointment cancelled successfully!');
         }
-        return $this->redirect(['donor/appointment']);
+        return $this->redirect(['donor/appointments']);
     }
 
     // =====================

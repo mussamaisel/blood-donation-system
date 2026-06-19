@@ -48,13 +48,13 @@ class Notification extends ActiveRecord
     {
         return [
             'id'         => 'ID',
-            'user_id'    => 'Mtumiaji',
-            'title'      => 'Kichwa',
-            'message'    => 'Ujumbe',
-            'type'       => 'Aina',
-            'is_read'    => 'Imesomwa',
-            'created_at' => 'Imetengenezwa',
-            'updated_at' => 'Imebadilishwa',
+            'user_id'    => 'User',
+            'title'      => 'Tittle',
+            'message'    => 'Message',
+            'type'       => 'Type',
+            'is_read'    => 'is read',
+            'created_at' => 'Created at',
+            'updated_at' => 'Updated at',
         ];
     }
 

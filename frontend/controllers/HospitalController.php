@@ -222,8 +222,6 @@ class HospitalController extends Controller
     {
         $appointment = Appointment::findOne($id);
         if ($appointment) {
-            $appointment->status = Appointment::STATUS_CANCELLED;
-            $appointment->save();
 
             // Tuma notification kwa Donor
             Notification::createNotification(
@@ -232,6 +230,9 @@ class HospitalController extends Controller
                 'Your appointment at ' . $appointment->hospital->name . ' on ' . $appointment->appointment_date . ' has been cancelled.',
                 'danger'
             );
+
+            // Futa appointment kabisa
+            $appointment->delete();
 
             Yii::$app->session->setFlash('success', 'Appointment rejected successfully!');
         }

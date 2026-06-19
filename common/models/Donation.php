@@ -45,15 +45,15 @@ class Donation extends ActiveRecord
     {
         return [
             'id'          => 'ID',
-            'donor_id'    => 'Mfadhili',
+            'donor_id'    => 'Donor',
             'hospital_id' => 'Hospitali',
-            'blood_type'  => 'Aina ya Damu',
-            'units'       => 'Idadi ya Units',
-            'status'      => 'Hali',
-            'notes'       => 'Maelezo',
-            'donated_at'  => 'Tarehe ya Kutoa',
-            'created_at'  => 'Imetengenezwa',
-            'updated_at'  => 'Imebadilishwa',
+            'blood_type'  => 'Blood type',
+            'units'       => 'Total units',
+            'status'      => 'Status',
+            'notes'       => 'Notes',
+            'donated_at'  => 'Donated at',
+            'created_at'  => 'Created at',
+            'updated_at'  => 'Updated at',
         ];
     }
 
