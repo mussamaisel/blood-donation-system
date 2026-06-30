@@ -59,19 +59,6 @@ if (Yii::$app->user->isGuest) {
             'class' => 'navbar-brand mb-0 h1'
         ]) ?>
     </div>
-
-    <!-- Language Switcher -->
-    <div>
-        <?php if (Yii::$app->language == 'en'): ?>
-            <?= Html::a('🇹🇿 Swahili', ['site/language', 'lang' => 'sw'], [
-                'class' => 'btn btn-outline-light btn-sm'
-            ]) ?>
-        <?php else: ?>
-            <?= Html::a('🇬🇧 English', ['site/language', 'lang' => 'en'], [
-                'class' => 'btn btn-outline-light btn-sm'
-            ]) ?>
-        <?php endif; ?>
-    </div>
 </nav>
 </header>
 
